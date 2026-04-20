@@ -22,13 +22,13 @@ Each roadmap is a step-by-step curriculum with curated resources, progress track
 ### Core Features
 - **AI Roadmap Generation** — Gemini AI creates 5–8 sequential learning steps with descriptions and resource links
 - **Interactive Timeline** — Visual timeline with milestone dots; toggle tasks complete/incomplete
-- **Progress Tracking** — Real-time progress bar synced to Supabase; persists across sessions
+- **Progress Tracking** — Real-time progress bar synced to Firebase Firestore; persists across sessions
 - **Full CRUD** — Create, Read, Update (progress + rename), and Delete roadmaps
 
 ### Authentication & Data
-- **Supabase Auth** — Email/password signup, login, logout with session persistence
+- **Firebase Auth** — Email/password signup, login, logout with session persistence
 - **Protected Routes** — Unauthorized users are redirected to the auth page
-- **Persistent Storage** — All roadmaps stored in Supabase PostgreSQL, scoped per user
+- **Persistent Storage** — All roadmaps stored in Firestore, scoped per user
 
 ### UX Polish
 - **Toast Notifications** — Global success/error feedback on every action (create, delete, rename)
@@ -44,14 +44,14 @@ Each roadmap is a step-by-step curriculum with curated resources, progress track
 
 | Layer | Technology |
 |---|---|
-| **Framework** | React 18 (Vite) |
+| **Framework** | React 19 (Vite) |
 | **Routing** | React Router v6 |
 | **State Management** | Context API (AuthContext, RoadmapContext, ToastContext) |
 | **Styling** | Tailwind CSS with semantic `@layer components` architecture |
 | **Animations** | Framer Motion |
 | **Icons** | Lucide React |
 | **AI** | Google Gemini 1.5 Pro API |
-| **Backend** | Supabase (Auth + PostgreSQL) |
+| **Backend** | Firebase Auth + Firestore |
 | **Type Safety** | PropTypes |
 | **Build Tool** | Vite 8 |
 
@@ -104,7 +104,7 @@ src/
 ├── services/            # External API & DB calls
 │   ├── ai.js
 │   ├── roadmapService.js
-│   └── supabase.js
+│   └── firebase.js
 ├── App.jsx              # Router + Providers + Lazy Loading
 ├── index.css            # Semantic CSS design system
 └── main.jsx             # Entry point
@@ -117,7 +117,7 @@ src/
 ### Prerequisites
 - Node.js 18+
 - npm 9+
-- A [Supabase](https://supabase.com) project (free tier works)
+- A [Firebase](https://firebase.google.com) project
 - A [Google AI Studio](https://aistudio.google.com) API key
 
 ### 1. Clone the Repository
@@ -138,32 +138,39 @@ npm install
 Create a `.env.local` file in the project root:
 
 ```env
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_FIREBASE_API_KEY=your-firebase-api-key
+VITE_FIREBASE_AUTH_DOMAIN=your-firebase-auth-domain
+VITE_FIREBASE_PROJECT_ID=your-firebase-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-firebase-storage-bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-firebase-messaging-sender-id
+VITE_FIREBASE_APP_ID=your-firebase-app-id
+VITE_FIREBASE_MEASUREMENT_ID=your-firebase-measurement-id
 VITE_GEMINI_API_KEY=your-gemini-api-key
 ```
 
-### 4. Set Up the Database
+### 4. Set Up Firebase
 
-In your Supabase dashboard, run this SQL to create the `roadmaps` table:
+In your Firebase console, enable Email/Password sign-in in Authentication.
 
-```sql
-CREATE TABLE roadmaps (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  title TEXT NOT NULL,
-  roadmap_json JSONB NOT NULL DEFAULT '[]',
-  progress_percentage INTEGER DEFAULT 0,
-  created_at TIMESTAMPTZ DEFAULT now()
-);
+Then create a Firestore database in production or test mode.
 
--- Enable Row Level Security
-ALTER TABLE roadmaps ENABLE ROW LEVEL SECURITY;
+Create a Firestore collection called `roadmaps`. Each document should include:
+- `user_id` (string)
+- `title` (string)
+- `roadmap_json` (array)
+- `progress_percentage` (number)
+- `created_at` (timestamp)
 
--- Users can only access their own roadmaps
-CREATE POLICY "Users manage own roadmaps"
-  ON roadmaps FOR ALL
-  USING (auth.uid() = user_id);
+If you want, use Firestore security rules such as:
+
+```js
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /roadmaps/{roadmapId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.user_id;
+    }
+  }
+}
 ```
 
 ### 5. Start the Development Server

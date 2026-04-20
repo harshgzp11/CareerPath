@@ -1,9 +1,9 @@
 import { useReducer, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../context/AuthContext';
-import { useRoadmap } from '../context/RoadmapContext';
-import { useToast } from '../context/ToastContext';
+import { m as Motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/useAuth';
+import { useRoadmap } from '../context/useRoadmap';
+import { useToast } from '../context/useToast';
 import { generateRoadmap } from '../services/ai';
 import { createRoadmap } from '../services/roadmapService';
 import { ChevronRight, ChevronLeft, Sparkles, AlertCircle } from 'lucide-react';
@@ -111,7 +111,7 @@ export default function Onboarding() {
       const roadmap_json = roadmapNodes.map(node => ({ ...node, completed: false }));
 
       const { data, error } = await createRoadmap({
-        user_id: user.id,
+        user_id: user.uid,
         title: `${role} Roadmap`,
         roadmap_json,
         progress_percentage: 0,
@@ -176,7 +176,7 @@ export default function Onboarding() {
             <div className="step-container">
               <AnimatePresence mode="wait" custom={1}>
                 {step === 1 && (
-                  <motion.div
+                  <Motion.div
                     key="step1"
                     custom={1}
                     variants={variants}
@@ -187,11 +187,11 @@ export default function Onboarding() {
                     className="step-slide"
                   >
                     <RoleStep role={role} onChange={updateFormData} />
-                  </motion.div>
+                  </Motion.div>
                 )}
                 
                 {step === 2 && (
-                  <motion.div
+                  <Motion.div
                     key="step2"
                     custom={1}
                     variants={variants}
@@ -202,11 +202,11 @@ export default function Onboarding() {
                     className="step-slide"
                   >
                     <LevelStep level={level} onChange={updateFormData} />
-                  </motion.div>
+                  </Motion.div>
                 )}
                 
                 {step === 3 && (
-                  <motion.div
+                  <Motion.div
                     key="step3"
                     custom={1}
                     variants={variants}
@@ -217,7 +217,7 @@ export default function Onboarding() {
                     className="step-slide"
                   >
                     <TimeStep time={time} onChange={updateFormData} />
-                  </motion.div>
+                  </Motion.div>
                 )}
               </AnimatePresence>
             </div>

@@ -1,9 +1,9 @@
 import { useMemo, useCallback } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useRoadmap } from '../context/RoadmapContext';
-import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/useAuth';
+import { useRoadmap } from '../context/useRoadmap';
+import { useToast } from '../context/useToast';
 import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m as Motion } from 'framer-motion';
 import { Plus, Compass } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import RoadmapCard from '../components/RoadmapCard';
@@ -63,7 +63,7 @@ export default function Dashboard() {
             ))}
           </div>
         ) : sortedRoadmaps.length === 0 ? (
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="empty-state-panel"
@@ -78,7 +78,7 @@ export default function Dashboard() {
             <Link to="/onboarding" className="btn-primary-large">
               Generate Your First Roadmap
             </Link>
-          </motion.div>
+          </Motion.div>
         ) : (
           <div className="grid-cards">
             {sortedRoadmaps.map((roadmap, index) => (

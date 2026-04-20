@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { motion } from 'framer-motion';
+import { m as Motion } from 'framer-motion';
 import { CheckCircle2, Circle, ExternalLink } from 'lucide-react';
 import PropTypes from 'prop-types';
 
@@ -26,7 +26,7 @@ const TimelineNode = memo(function TimelineNode({
   activeRef,
 }) {
   return (
-    <motion.div
+    <Motion.div
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.1 }}
@@ -74,7 +74,7 @@ const TimelineNode = memo(function TimelineNode({
           </div>
         )}
       </div>
-    </motion.div>
+    </Motion.div>
   );
 });
 

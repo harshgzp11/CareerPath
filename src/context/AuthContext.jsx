@@ -1,35 +1,38 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../services/supabase';
+import { useEffect, useState, createContext } from 'react';
+import { auth } from '../services/firebase';
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut as firebaseSignOut,
+} from 'firebase/auth';
 
-const AuthContext = createContext();
+/* eslint-disable-next-line react-refresh/only-export-components */
+export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
+    return unsubscribe;
   }, []);
 
   const login = async (email, password) => {
-    return supabase.auth.signInWithPassword({ email, password });
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
   const signup = async (email, password) => {
-    return supabase.auth.signUp({ email, password });
+    return createUserWithEmailAndPassword(auth, email, password);
   };
 
   const logout = async () => {
-    return supabase.auth.signOut();
+    return firebaseSignOut(auth);
   };
 
   return (
@@ -38,5 +41,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);

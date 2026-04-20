@@ -1,8 +1,9 @@
-import { createContext, useContext, useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useCallback, createContext } from 'react';
+import { m as Motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, XCircle, X } from 'lucide-react';
 
-const ToastContext = createContext();
+/* eslint-disable-next-line react-refresh/only-export-components */
+export const ToastContext = createContext(null);
 
 /**
  * ToastProvider — global toast notification system.
@@ -32,7 +33,7 @@ export function ToastProvider({ children }) {
       <div className="toast-container">
         <AnimatePresence>
           {toasts.map(toast => (
-            <motion.div
+            <Motion.div
               key={toast.id}
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -48,12 +49,10 @@ export function ToastProvider({ children }) {
               <button onClick={() => removeToast(toast.id)} className="toast-close">
                 <X className="icon-xs" />
               </button>
-            </motion.div>
+            </Motion.div>
           ))}
         </AnimatePresence>
       </div>
     </ToastContext.Provider>
   );
 }
-
-export const useToast = () => useContext(ToastContext);

@@ -1,73 +1,109 @@
-import { supabase } from './supabase';
+import { db, timestamp } from './firebase';
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  getDocs,
+  doc,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+} from 'firebase/firestore';
 
 /**
- * roadmapService — all direct Supabase calls related to roadmaps
- * are encapsulated here, keeping pages free of DB concerns.
+ * roadmapService — all direct Firestore calls related to roadmaps.
  */
 
-/**
- * Fetch a single roadmap by id, scoped to the authenticated user.
- * @param {string} id
- * @param {string} userId
- * @returns {Promise<{data, error}>}
- */
+export async function fetchRoadmaps(userId) {
+  try {
+    const roadmapsQuery = query(
+      collection(db, 'roadmaps'),
+      where('user_id', '==', userId),
+      orderBy('created_at', 'desc')
+    );
+
+    const snapshot = await getDocs(roadmapsQuery);
+    const data = snapshot.docs.map((roadmapDoc) => ({
+      id: roadmapDoc.id,
+      ...roadmapDoc.data(),
+    }));
+
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+}
+
 export async function fetchRoadmapById(id, userId) {
-  return supabase
-    .from('roadmaps')
-    .select('*')
-    .eq('id', id)
-    .eq('user_id', userId)
-    .single();
+  try {
+    const roadmapRef = doc(db, 'roadmaps', id);
+    const roadmapSnap = await getDoc(roadmapRef);
+
+    if (!roadmapSnap.exists()) {
+      return { data: null, error: new Error('Roadmap not found') };
+    }
+
+    const data = { id: roadmapSnap.id, ...roadmapSnap.data() };
+    if (data.user_id !== userId) {
+      return { data: null, error: new Error('Unauthorized') };
+    }
+
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
 }
 
-/**
- * Persist task completion state and progress for a roadmap.
- * @param {string} roadmapId
- * @param {Array}  roadmapJson
- * @param {number} progressPercentage
- * @returns {Promise<{data, error}>}
- */
 export async function updateRoadmapProgress(roadmapId, roadmapJson, progressPercentage) {
-  return supabase
-    .from('roadmaps')
-    .update({ roadmap_json: roadmapJson, progress_percentage: progressPercentage })
-    .eq('id', roadmapId);
+  try {
+    const roadmapRef = doc(db, 'roadmaps', roadmapId);
+    await updateDoc(roadmapRef, {
+      roadmap_json: roadmapJson,
+      progress_percentage: progressPercentage,
+    });
+    return { data: null, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
 }
 
-/**
- * Insert a brand-new roadmap record.
- * @param {object} roadmap - { user_id, title, roadmap_json, progress_percentage }
- * @returns {Promise<{data, error}>}
- */
 export async function createRoadmap(roadmap) {
-  return supabase.from('roadmaps').insert([roadmap]).select().single();
+  try {
+    const newRoadmapRef = await addDoc(collection(db, 'roadmaps'), {
+      ...roadmap,
+      created_at: timestamp(),
+    });
+
+    return {
+      data: {
+        id: newRoadmapRef.id,
+        ...roadmap,
+      },
+      error: null,
+    };
+  } catch (error) {
+    return { data: null, error };
+  }
 }
 
-/**
- * Permanently delete a roadmap by id, scoped to the authenticated user.
- * @param {string} id
- * @param {string} userId
- * @returns {Promise<{error}>}
- */
-export async function deleteRoadmap(id, userId) {
-  return supabase
-    .from('roadmaps')
-    .delete()
-    .eq('id', id)
-    .eq('user_id', userId);
+export async function deleteRoadmap(id /* userId */) {
+  try {
+    const roadmapRef = doc(db, 'roadmaps', id);
+    await deleteDoc(roadmapRef);
+    return { error: null };
+  } catch (error) {
+    return { error };
+  }
 }
 
-/**
- * Rename a roadmap's title.
- * @param {string} id
- * @param {string} newTitle
- * @returns {Promise<{data, error}>}
- */
 export async function renameRoadmap(id, newTitle) {
-  return supabase
-    .from('roadmaps')
-    .update({ title: newTitle })
-    .eq('id', id)
-    .select()
-    .single();
+  try {
+    const roadmapRef = doc(db, 'roadmaps', id);
+    await updateDoc(roadmapRef, { title: newTitle });
+    return { data: { id, title: newTitle }, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
 }

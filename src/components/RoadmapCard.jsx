@@ -1,5 +1,5 @@
 import { memo, useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m as Motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, Clock, Trash2, AlertTriangle } from 'lucide-react';
 import PropTypes from 'prop-types';
 
@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
  * Wrapped in React.memo — prevents re-render when sibling cards
  * or parent state updates unrelated to this card's data.
  *
- * @param {object}   roadmap   - The roadmap data object from Supabase
+ * @param {object}   roadmap   - The roadmap data object from Firestore
  * @param {number}   index     - Position in list, used for staggered animation
  * @param {Function} onClick   - Handler to open the roadmap detail page
  * @param {Function} onDelete  - Handler to delete this roadmap
@@ -40,7 +40,7 @@ const RoadmapCard = memo(function RoadmapCard({ roadmap, index, onClick, onDelet
   }, [onDelete, roadmap.id]);
 
   return (
-    <motion.div
+    <Motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
@@ -53,7 +53,7 @@ const RoadmapCard = memo(function RoadmapCard({ roadmap, index, onClick, onDelet
       {/* Delete confirmation overlay */}
       <AnimatePresence>
         {confirmDelete && (
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -78,7 +78,7 @@ const RoadmapCard = memo(function RoadmapCard({ roadmap, index, onClick, onDelet
                 {deleting ? 'Deleting...' : 'Delete'}
               </button>
             </div>
-          </motion.div>
+          </Motion.div>
         )}
       </AnimatePresence>
 
@@ -108,7 +108,7 @@ const RoadmapCard = memo(function RoadmapCard({ roadmap, index, onClick, onDelet
       <div className="progress-bg">
         <div className="progress-fill" style={{ width: `${progress}%` }}></div>
       </div>
-    </motion.div>
+    </Motion.div>
   );
 });
 

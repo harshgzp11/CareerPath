@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m as Motion } from 'framer-motion';
 import { Target } from 'lucide-react';
 
 export default function Auth() {
@@ -49,7 +49,7 @@ export default function Auth() {
         <div className="bg-glow-secondary" />
       </div>
 
-      <motion.div 
+      <Motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="glass-panel"
@@ -120,7 +120,7 @@ export default function Auth() {
             {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Log in'}
           </button>
         </div>
-      </motion.div>
+      </Motion.div>
     </div>
   );
 }

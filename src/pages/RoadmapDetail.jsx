@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useRoadmap } from '../context/RoadmapContext';
-import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/useAuth';
+import { useRoadmap } from '../context/useRoadmap';
+import { useToast } from '../context/useToast';
 import { fetchRoadmapById, deleteRoadmap, renameRoadmap } from '../services/roadmapService';
-import { motion } from 'framer-motion';
+import { m as Motion } from 'framer-motion';
 import { CheckCircle2, ArrowLeft, Trash2, Pencil, Check, X } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import TimelineNode from '../components/TimelineNode';
@@ -35,7 +35,7 @@ export default function RoadmapDetail() {
     const loadRoadmap = async () => {
       if (!activeRoadmap || activeRoadmap.id !== id) {
         setLoading(true);
-        const { data, error } = await fetchRoadmapById(id, user.id);
+        const { data, error } = await fetchRoadmapById(id, user.uid);
         if (abortController.signal.aborted) return;
         if (data) setActiveRoadmap(data);
         if (error) navigate('/dashboard');
@@ -45,7 +45,7 @@ export default function RoadmapDetail() {
     loadRoadmap();
 
     return () => abortController.abort();
-  }, [id, activeRoadmap, setActiveRoadmap, navigate, user.id]);
+  }, [id, activeRoadmap, setActiveRoadmap, navigate, user.uid]);
 
   // Scroll the active node into view once loading is done
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function RoadmapDetail() {
   const handleDelete = useCallback(async () => {
     if (!activeRoadmap) return;
     setDeleting(true);
-    const { error } = await deleteRoadmap(activeRoadmap.id, user.id);
+    const { error } = await deleteRoadmap(activeRoadmap.id, user.uid);
     if (!error) {
       setActiveRoadmap(null);
       addToast('Roadmap deleted successfully');
@@ -79,7 +79,7 @@ export default function RoadmapDetail() {
       setDeleting(false);
       setDeleteConfirm(false);
     }
-  }, [activeRoadmap, user.id, setActiveRoadmap, navigate, addToast]);
+  }, [activeRoadmap, user.uid, setActiveRoadmap, navigate, addToast]);
 
   // Start editing title
   const startRename = useCallback(() => {
@@ -212,7 +212,7 @@ export default function RoadmapDetail() {
         </div>
 
         {progressPercentage === 100 && (
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="milestone-card"
@@ -227,7 +227,7 @@ export default function RoadmapDetail() {
             <button onClick={() => navigate('/onboarding')} className="btn-primary">
               Start a New Journey
             </button>
-          </motion.div>
+          </Motion.div>
         )}
       </main>
     </div>
