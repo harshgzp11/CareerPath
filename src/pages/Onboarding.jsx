@@ -1,7 +1,7 @@
 import { useReducer, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { m as Motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../context/useAuth';
+import { useAuth } from '../context/useAuth.jsx';
 import { useRoadmap } from '../context/useRoadmap';
 import { useToast } from '../context/useToast';
 import { generateRoadmap } from '../services/ai';
@@ -108,6 +108,9 @@ export default function Onboarding() {
     dispatch({ type: 'START_LOADING' });
     try {
       const roadmapNodes = await generateRoadmap(role, level, time);
+      if (roadmapNodes?._fallback) {
+        addToast('AI quota reached. Generated a local backup roadmap.', 'warning');
+      }
       const roadmap_json = roadmapNodes.map(node => ({ ...node, completed: false }));
 
       const { data, error } = await createRoadmap({

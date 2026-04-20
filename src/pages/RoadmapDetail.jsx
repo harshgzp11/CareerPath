@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/useAuth';
+import { useAuth } from '../context/useAuth.jsx';
 import { useRoadmap } from '../context/useRoadmap';
 import { useToast } from '../context/useToast';
 import { fetchRoadmapById, deleteRoadmap, renameRoadmap } from '../services/roadmapService';
@@ -16,6 +16,7 @@ export default function RoadmapDetail() {
   const { addToast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!activeRoadmap);
+  const [error, setError] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -38,7 +39,9 @@ export default function RoadmapDetail() {
         const { data, error } = await fetchRoadmapById(id, user.uid);
         if (abortController.signal.aborted) return;
         if (data) setActiveRoadmap(data);
-        if (error) navigate('/dashboard');
+        if (error) {
+          setError('Failed to load roadmap details. Please try again.');
+        }
         setLoading(false);
       }
     };
@@ -113,12 +116,23 @@ export default function RoadmapDetail() {
     if (e.key === 'Escape') cancelRename();
   }, [saveRename, cancelRename]);
 
-  if (loading || !activeRoadmap) {
+  if (loading) {
     return (
       <div className="layout-container">
         <Navbar />
         <div className="flex-grow flex-center">
           <div className="loader-spinner"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="layout-container">
+        <Navbar />
+        <div className="flex-grow flex-center">
+          <div className="error-message">{error}</div>
         </div>
       </div>
     );

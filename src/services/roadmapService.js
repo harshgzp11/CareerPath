@@ -3,7 +3,6 @@ import {
   collection,
   query,
   where,
-  orderBy,
   getDocs,
   doc,
   getDoc,
@@ -20,8 +19,7 @@ export async function fetchRoadmaps(userId) {
   try {
     const roadmapsQuery = query(
       collection(db, 'roadmaps'),
-      where('user_id', '==', userId),
-      orderBy('created_at', 'desc')
+      where('user_id', '==', userId)
     );
 
     const snapshot = await getDocs(roadmapsQuery);

@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import { useAuth } from '../context/useAuth';
+import { useAuth } from '../context/useAuth.jsx';
 import { useRoadmap } from '../context/useRoadmap';
 import { useToast } from '../context/useToast';
 import { useNavigate, Link } from 'react-router-dom';
@@ -9,28 +9,24 @@ import Navbar from '../components/Navbar';
 import RoadmapCard from '../components/RoadmapCard';
 import { useRoadmaps } from '../hooks/useRoadmaps';
 
-export default function Dashboard() {
+const Dashboard = () => {
   const { user } = useAuth();
   const { setActiveRoadmap } = useRoadmap();
   const { addToast } = useToast();
   const navigate = useNavigate();
 
-  // Custom hook: all data-fetching, sorting and deletion logic encapsulated
   const { roadmaps, loading, removeRoadmap } = useRoadmaps(user);
 
-  // useMemo: derive a display-ready sorted list; avoids re-sorting on every render
   const sortedRoadmaps = useMemo(
     () => [...roadmaps].sort((a, b) => (b.progress_percentage || 0) - (a.progress_percentage || 0)),
     [roadmaps]
   );
 
-  // useCallback: stable reference so RoadmapCard onClick doesn't re-create on every render
   const handleOpenRoadmap = useCallback((roadmap) => {
     setActiveRoadmap(roadmap);
     navigate(`/roadmap/${roadmap.id}`);
   }, [setActiveRoadmap, navigate]);
 
-  // Wrap delete with toast feedback
   const handleDelete = useCallback(async (roadmapId) => {
     const result = await removeRoadmap(roadmapId);
     if (result?.error) {
@@ -95,4 +91,6 @@ export default function Dashboard() {
       </main>
     </div>
   );
-}
+};
+
+export default Dashboard;

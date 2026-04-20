@@ -1,9 +1,9 @@
-import { useState, useCallback, createContext } from 'react';
+import { createContext, useState, useMemo, useCallback } from 'react';
 import { m as Motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, XCircle, X } from 'lucide-react';
 
 /* eslint-disable-next-line react-refresh/only-export-components */
-export const ToastContext = createContext(null);
+export const ToastContext = createContext();
 
 /**
  * ToastProvider — global toast notification system.
@@ -15,7 +15,6 @@ export function ToastProvider({ children }) {
   const addToast = useCallback((message, type = 'success') => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, message, type }]);
-    // Auto-dismiss after 4 seconds
     setTimeout(() => {
       setToasts(prev => prev.filter(t => t.id !== id));
     }, 4000);
@@ -25,11 +24,16 @@ export function ToastProvider({ children }) {
     setToasts(prev => prev.filter(t => t.id !== id));
   }, []);
 
+  const value = useMemo(() => ({
+    toasts,
+    addToast,
+    removeToast,
+  }), [toasts, addToast, removeToast]);
+
   return (
-    <ToastContext.Provider value={{ addToast }}>
+    <ToastContext.Provider value={value}>
       {children}
 
-      {/* Toast container — fixed to bottom-right */}
       <div className="toast-container">
         <AnimatePresence>
           {toasts.map(toast => (

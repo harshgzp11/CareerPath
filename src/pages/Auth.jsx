@@ -1,15 +1,35 @@
-import { useState, useRef, useEffect } from 'react';
-import { useAuth } from '../context/useAuth';
+import { useReducer, useRef, useEffect } from 'react';
+import { useAuth } from '../context/useAuth.jsx';
 import { useNavigate } from 'react-router-dom';
 import { m as Motion } from 'framer-motion';
 import { Target } from 'lucide-react';
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const initialState = {
+    isLogin: true,
+    email: '',
+    password: '',
+    error: null,
+    loading: false,
+  };
+
+  function reducer(state, action) {
+    switch (action.type) {
+      case 'SET_FIELD':
+        return { ...state, [action.field]: action.value };
+      case 'TOGGLE_MODE':
+        return { ...state, isLogin: !state.isLogin };
+      case 'SET_LOADING':
+        return { ...state, loading: action.payload };
+      case 'SET_ERROR':
+        return { ...state, error: action.payload };
+      default:
+        return state;
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { isLogin, email, password, error, loading } = state;
   const { login, signup } = useAuth();
   const navigate = useNavigate();
   const emailRef = useRef(null);
@@ -22,9 +42,8 @@ export default function Auth() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
-
+    dispatch({ type: 'SET_ERROR', payload: null });
+    dispatch({ type: 'SET_LOADING', payload: true });
     try {
       if (isLogin) {
         const { error } = await login(email, password);
@@ -35,11 +54,14 @@ export default function Auth() {
       }
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message);
+      dispatch({ type: 'SET_ERROR', payload: err.message });
     } finally {
-      setLoading(false);
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
   };
+
+  const toggleMode = () => dispatch({ type: 'TOGGLE_MODE' });
+  const setField = (field, value) => dispatch({ type: 'SET_FIELD', field, value });
 
   return (
     <div className="layout-centered">
@@ -65,45 +87,48 @@ export default function Auth() {
         </div>
 
         {error && (
-          <div className="error-banner">
+          <div className="error-banner" role="alert">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div>
-            <label className="form-label">Email</label>
+            <label className="form-label" htmlFor="email-input">Email</label>
             <input
+              id="email-input"
               type="email"
               ref={emailRef}
               required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setField('email', e.target.value)}
               className="input-field"
               placeholder="you@example.com"
             />
           </div>
           <div>
-            <label className="form-label">Password</label>
+            <label className="form-label" htmlFor="password-input">Password</label>
             <input
+              id="password-input"
               type="password"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setField('password', e.target.value)}
               className="input-field"
               placeholder="••••••••"
               minLength={6}
             />
           </div>
-          
+
           <button
             type="submit"
             disabled={loading}
             className="btn-primary"
+            aria-label={isLogin ? 'Log in' : 'Create account'}
           >
             {loading ? (
               <span className="flex-center space-x-2">
-                <span className="loader-spinner-sm"></span>
+                <span className="loader-spinner-sm" />
                 <span>Processing...</span>
               </span>
             ) : (
@@ -114,8 +139,10 @@ export default function Auth() {
 
         <div className="auth-footer">
           <button
-            onClick={() => setIsLogin(!isLogin)}
+            type="button"
+            onClick={toggleMode}
             className="text-link"
+            aria-label="Toggle login/signup mode"
           >
             {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Log in'}
           </button>
