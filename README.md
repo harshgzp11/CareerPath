@@ -123,8 +123,8 @@ src/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/careerpath.git
-cd careerpath
+git clone https://github.com/harshgzp11/CareerPath.git
+cd CareerPath
 ```
 
 ### 2. Install Dependencies
@@ -133,47 +133,13 @@ cd careerpath
 npm install
 ```
 
-### 3. Configure Environment Variables
+### 3. Set up Firebase
+- Create a Firebase project at [Firebase Console](https://console.firebase.google.com/).
+- Enable Firebase Authentication and Firestore.
+- Download the `firebaseConfig` object from your Firebase project settings.
+- Replace the placeholder configuration in `src/services/firebase.js` with your Firebase config.
 
-Create a `.env.local` file in the project root:
-
-```env
-VITE_FIREBASE_API_KEY=your-firebase-api-key
-VITE_FIREBASE_AUTH_DOMAIN=your-firebase-auth-domain
-VITE_FIREBASE_PROJECT_ID=your-firebase-project-id
-VITE_FIREBASE_STORAGE_BUCKET=your-firebase-storage-bucket
-VITE_FIREBASE_MESSAGING_SENDER_ID=your-firebase-messaging-sender-id
-VITE_FIREBASE_APP_ID=your-firebase-app-id
-VITE_FIREBASE_MEASUREMENT_ID=your-firebase-measurement-id
-VITE_GEMINI_API_KEY=your-gemini-api-key
-```
-
-### 4. Set Up Firebase
-
-In your Firebase console, enable Email/Password sign-in in Authentication.
-
-Then create a Firestore database in production or test mode.
-
-Create a Firestore collection called `roadmaps`. Each document should include:
-- `user_id` (string)
-- `title` (string)
-- `roadmap_json` (array)
-- `progress_percentage` (number)
-- `created_at` (timestamp)
-
-If you want, use Firestore security rules such as:
-
-```js
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /roadmaps/{roadmapId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.user_id;
-    }
-  }
-}
-```
-
-### 5. Start the Development Server
+### 4. Start the Development Server
 
 ```bash
 npm run dev
@@ -181,12 +147,24 @@ npm run dev
 
 The app will be available at `http://localhost:5173`.
 
-### 6. Build for Production
+### 5. Open your browser and navigate to `http://localhost:5173`.
 
-```bash
-npm run build
-npm run preview
-```
+---
+
+## Clean Commits
+
+This project follows a clean commit history approach:
+- Each commit represents a logical unit of work.
+- Commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/) standard.
+- Example commit messages:
+  - `feat: add AI roadmap generation`
+  - `fix: resolve loading state bug in Dashboard`
+  - `chore: update dependencies`
+
+To ensure clean commits:
+- Use `git add` to stage only relevant changes.
+- Use `git commit -m "<type>: <description>"` to create meaningful commit messages.
+- Avoid vague messages like "final changes" or "fixes".
 
 ---
 
