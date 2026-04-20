@@ -1,0 +1,502 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-darkBg text-white antialiased selection:bg-brandPrimary selection:text-white;
+    font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  }
+}
+
+@layer components {
+  /* ==========================================================================
+     1. LAYOUT & CONTAINERS
+     ========================================================================== */
+  .layout-container {
+    @apply min-h-screen bg-darkBg flex flex-col pb-12;
+  }
+  .layout-centered {
+    @apply min-h-screen bg-darkBg flex flex-col items-center justify-center px-4 relative overflow-hidden;
+  }
+  .layout-content {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 flex-grow;
+  }
+  .roadmap-content {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12;
+  }
+  .grid-cards {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  .flex-center-y {
+    @apply flex items-center;
+  }
+  .screen-center {
+    @apply flex items-center justify-center min-h-screen bg-darkBg text-white;
+  }
+  .main-content-centered {
+    @apply flex-grow flex-center p-4;
+  }
+  .layout-padded {
+    @apply layout-container pb-20;
+  }
+  .topbar-sticky {
+    @apply sticky top-0 z-40 bg-darkBg/90 backdrop-blur-md border-b border-gray-800 pt-4 pb-0 shadow-lg;
+  }
+
+  /* ==========================================================================
+     2. CARDS & PANELS
+     ========================================================================== */
+  .card {
+    @apply bg-darkCard rounded-xl border border-gray-800 shadow-xl overflow-hidden;
+  }
+  .card-interactive {
+    @apply card p-6 cursor-pointer hover:border-brandPrimary/50 transition-all duration-300 relative overflow-hidden;
+  }
+  .card-badge {
+    @apply flex items-center space-x-1.5 text-sm text-gray-400;
+  }
+  .card-interactive-indicator {
+    @apply absolute top-0 left-0 w-1 h-full bg-brandPrimary transform origin-bottom scale-y-0 group-hover:scale-y-100 transition-transform duration-300;
+  }
+  .card-header {
+    @apply flex justify-between items-start mb-2;
+  }
+  .card-stats {
+    @apply flex items-center space-x-4 text-sm text-gray-400 mb-6 mt-4;
+  }
+  .stat-item {
+    @apply flex items-center space-x-1;
+  }
+  .glass-panel {
+    @apply card w-full max-w-md p-8 relative z-10 bg-darkCard/80 backdrop-blur-md;
+  }
+  .form-card {
+    @apply card w-full max-w-lg p-8;
+  }
+  .empty-state-panel {
+    @apply flex flex-col items-center justify-center py-20 px-4 text-center rounded-2xl border border-gray-800 bg-darkCard/50;
+  }
+
+  /* ==========================================================================
+     3. TYPOGRAPHY
+     ========================================================================== */
+  .text-heading {
+    @apply text-3xl font-bold tracking-tight text-white mb-2;
+  }
+  .text-title {
+    @apply text-xl font-bold text-white;
+  }
+  .text-subheading {
+    @apply text-lg text-gray-400;
+  }
+  .text-subheading-spaced {
+    @apply text-subheading mt-2;
+  }
+  .text-muted {
+    @apply text-sm text-gray-400;
+  }
+  .text-muted-spaced {
+    @apply text-muted mb-6;
+  }
+  .text-link {
+    @apply text-brandPrimary hover:text-brandSecondary transition-colors font-medium;
+  }
+  .form-label {
+    @apply block text-sm font-medium text-gray-400 mb-1;
+  }
+  .form-label-lg {
+    @apply block text-lg font-medium text-white mb-4;
+  }
+  .roadmap-title {
+    @apply text-heading md:text-3xl capitalize mb-0;
+  }
+  .roadmap-progress-text {
+    @apply text-brandSecondary font-mono text-xl font-bold;
+  }
+  .card-title-base {
+    @apply text-xl font-semibold;
+  }
+  .card-title-completed {
+    @apply text-xl font-semibold line-through text-muted;
+  }
+  .card-title-pending {
+    @apply text-xl font-semibold text-white;
+  }
+  .card-title-hoverable {
+    @apply text-xl font-semibold text-white mb-2 group-hover:text-brandPrimary transition-colors line-clamp-1;
+  }
+  .card-description {
+    @apply text-muted mb-6 leading-relaxed;
+  }
+  .section-title {
+    @apply text-xl font-bold text-white mb-2;
+  }
+
+  /* ==========================================================================
+     4. BUTTONS & INPUTS
+     ========================================================================== */
+  .btn-primary {
+    @apply w-full px-4 py-2.5 bg-brandPrimary hover:bg-indigo-500 text-white font-semibold rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary-fluid {
+    @apply w-full btn-primary py-3 flex items-center justify-center space-x-2;
+  }
+  .btn-primary-icon {
+    @apply px-4 py-2.5 bg-brandPrimary hover:bg-indigo-500 text-white font-semibold rounded-lg transition-colors duration-200 flex items-center space-x-2;
+  }
+  .btn-primary-glow {
+    @apply btn-primary-icon bg-gradient-to-r from-brandPrimary to-indigo-600 hover:from-indigo-600 hover:to-brandPrimary shadow-lg shadow-brandPrimary/30;
+  }
+  .btn-primary-large {
+    @apply px-8 py-3 bg-brandPrimary hover:bg-indigo-500 text-white font-semibold text-lg rounded-xl transition-colors duration-200 shadow-lg shadow-brandPrimary/20;
+  }
+  .btn-secondary {
+    @apply px-4 py-2 bg-darkCard hover:bg-gray-800 text-white font-medium rounded-lg border border-gray-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary-icon {
+    @apply btn-secondary flex items-center justify-center space-x-2;
+  }
+  .back-btn {
+    @apply flex items-center space-x-2 text-sm text-gray-400 hover:text-white transition-colors mb-4;
+  }
+  .input-field {
+    @apply w-full bg-darkBg/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brandPrimary focus:border-transparent transition-all;
+  }
+  .input-lg {
+    @apply input-field text-lg py-4;
+  }
+  .select-lg {
+    @apply input-lg appearance-none;
+  }
+  .slider-wrapper {
+    @apply flex items-center space-x-4;
+  }
+  .slider-value {
+    @apply text-2xl font-bold text-white w-16 text-right;
+  }
+  .slider-input {
+    @apply w-full accent-brandPrimary;
+  }
+
+  /* ==========================================================================
+     5. LOADERS & PROGRESS
+     ========================================================================== */
+  .progress-bg {
+    @apply w-full bg-gray-800 h-1.5 overflow-hidden;
+  }
+  .progress-fill {
+    @apply bg-brandSecondary h-full transition-all duration-700 ease-out;
+  }
+  .loader-layout {
+    @apply w-full max-w-md text-center;
+  }
+  .loader-stack {
+    @apply mt-12 space-y-4;
+  }
+  .loader-spinner {
+    @apply animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brandPrimary;
+  }
+  .loader-spinner-sm {
+    @apply animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white;
+  }
+  .shimmer-block {
+    @apply bg-gray-800/50 rounded-lg animate-pulse w-full h-16;
+  }
+  .card-skeleton {
+    @apply card p-6 h-48 animate-pulse bg-gray-800/50;
+  }
+  .spinner-container {
+    @apply relative w-24 h-24 mx-auto mb-8;
+  }
+  .spinner-bg {
+    @apply absolute inset-0 border-4 border-gray-800 rounded-full;
+  }
+  .spinner-ring {
+    @apply absolute inset-0 border-4 border-brandPrimary rounded-full border-t-transparent animate-spin;
+  }
+  .spinner-center {
+    @apply absolute inset-0 flex items-center justify-center;
+  }
+
+  /* ==========================================================================
+     6. MODULES (Complex UI Pieces)
+     ========================================================================== */
+  .step-container {
+    @apply relative h-32 w-full max-w-sm mx-auto overflow-hidden;
+  }
+  .step-slide {
+    @apply absolute w-full;
+  }
+  .step-header {
+    @apply flex justify-between items-center mb-8 border-b border-gray-800 pb-4;
+  }
+  .step-indicator {
+    @apply text-sm font-medium text-brandSecondary bg-brandSecondary/10 px-3 py-1 rounded-full;
+  }
+
+  /* Timeline */
+  .timeline-container {
+    @apply relative border-l border-gray-800 ml-4 md:ml-8 space-y-12;
+  }
+  .timeline-node {
+    @apply relative pl-8 md:pl-12 transition-all duration-300;
+  }
+  .timeline-dot-btn {
+    @apply absolute -left-3 top-0 p-1 bg-darkBg outline-none;
+  }
+  /* Navbar Modules */
+  .navbar {
+    @apply sticky top-0 z-50 bg-darkBg/80 backdrop-blur-md border-b border-gray-800;
+  }
+  .container-wide {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .container-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .navbar-inner {
+    @apply flex justify-between h-16 items-center;
+  }
+  .logo-btn {
+    @apply flex items-center space-x-2;
+  }
+  .logo-box {
+    @apply w-8 h-8 rounded-lg bg-brandPrimary/20 flex items-center justify-center;
+  }
+  .logo-icon {
+    @apply w-5 h-5 text-brandPrimary;
+  }
+  .logo-text {
+    @apply font-bold text-white text-lg tracking-tight;
+  }
+  .navbar-links {
+    @apply flex items-center space-x-4;
+  }
+  .navbar-add-btn {
+    @apply hidden sm:flex items-center space-x-1 text-sm font-medium text-brandSecondary hover:text-green-400 transition-colors;
+  }
+  .navbar-divider {
+    @apply w-px h-6 bg-gray-800 hidden sm:block;
+  }
+  .navbar-email {
+    @apply text-sm text-gray-400 hidden sm:block;
+  }
+  .navbar-logout {
+    @apply p-2 text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-gray-800;
+  }
+
+  /* Page Blocks */
+  .dashboard-title {
+    @apply text-heading text-3xl tracking-tight mb-0;
+  }
+  .dashboard-subtitle {
+    @apply text-subheading mt-1;
+  }
+  .create-btn-text {
+    @apply hidden sm:inline;
+  }
+  .empty-icon {
+    @apply w-10 h-10 text-brandPrimary;
+  }
+  .empty-text {
+    @apply text-gray-400 max-w-md mb-8;
+  }
+  .milestone-card {
+    @apply mt-16 text-center card p-8 border-brandSecondary bg-brandSecondary/5;
+  }
+  .node-card {
+    @apply card p-6 border-gray-800 transition-all;
+  }
+  .node-card-active {
+    @apply card p-6 border-brandPrimary/50 shadow-xl shadow-brandPrimary/10 transition-all;
+  }
+  .node-done {
+    @apply relative pl-8 md:pl-12 transition-all duration-300 opacity-70 grayscale;
+  }
+  .node-active {
+    @apply relative pl-8 md:pl-12 transition-all duration-300 scale-[1.02];
+  }
+  .resource-section {
+    @apply space-y-2 border-t border-gray-800/50 pt-4;
+  }
+  .resource-title {
+    @apply text-subheading font-semibold uppercase tracking-wider mb-3;
+  }
+  .resource-list {
+    @apply flex flex-wrap gap-3;
+  }
+  .resource-badge {
+    @apply inline-flex items-center space-x-1 text-xs font-medium px-3 py-1.5 rounded-md bg-gray-800/50 hover:bg-brandPrimary/20 text-brandPrimary hover:text-indigo-300 transition-colors border border-gray-700/50 hover:border-brandPrimary/30;
+  }
+  .step-indicator {
+    @apply text-xs font-semibold text-brandPrimary bg-brandPrimary/10 px-3 py-1 rounded-full;
+  }
+  .error-banner {
+    @apply mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-start space-x-3 text-sm;
+  }
+
+  /* ==========================================================================
+     7. ICONS & DECORATIONS
+     ========================================================================== */
+  .icon-primary {
+    @apply w-6 h-6 text-brandPrimary;
+  }
+  .spinner-icon {
+    @apply icon-primary w-8 h-8 animate-pulse;
+  }
+  .icon-xs {
+    @apply w-3 h-3;
+  }
+  .icon-sm {
+    @apply w-4 h-4;
+  }
+  .icon-sm-secondary {
+    @apply w-4 h-4 text-brandSecondary;
+  }
+  .icon-md {
+    @apply w-5 h-5;
+  }
+  .icon-error {
+    @apply w-5 h-5 flex-shrink-0;
+  }
+  .icon-secondary-lg {
+    @apply w-8 h-8 text-brandSecondary;
+  }
+  .icon-box {
+    @apply w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl flex items-center justify-center mb-4 text-brandPrimary;
+  }
+  .icon-box-secondary {
+    @apply inline-flex items-center justify-center w-16 h-16 rounded-full bg-brandSecondary/20 mb-4;
+  }
+  .icon-box-lg {
+    @apply w-20 h-20 bg-brandPrimary/10 border border-brandPrimary/20 rounded-full flex items-center justify-center mb-6 text-brandPrimary;
+  }
+  .icon-completed {
+    @apply w-6 h-6 text-brandSecondary bg-darkBg;
+  }
+  .icon-current {
+    @apply w-6 h-6 text-brandPrimary fill-brandPrimary/20 animate-pulse bg-darkBg;
+  }
+  .icon-pending {
+    @apply w-6 h-6 text-gray-600 group-hover:text-gray-400 transition-colors bg-darkBg;
+  }
+  .bg-decoration-layer {
+    @apply absolute top-0 left-0 w-full h-full overflow-hidden z-0;
+  }
+  .bg-glow-primary {
+    @apply absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-brandPrimary/20 blur-[120px];
+  }
+  .bg-glow-secondary {
+    @apply absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-brandSecondary/20 blur-[120px];
+  }
+
+  /* ==========================================================================
+     8. PAGE BLOCKS (Headers, Forms, Actions)
+     ========================================================================== */
+  .auth-header {
+    @apply flex flex-col items-center mb-8 text-center;
+  }
+  .auth-form {
+    @apply space-y-5;
+  }
+  .auth-footer {
+    @apply mt-6 text-center;
+  }
+  .page-header {
+    @apply flex items-center justify-between mb-8;
+  }
+  .roadmap-header {
+    @apply flex justify-between items-end mb-4;
+  }
+  .step-header {
+    @apply flex items-center justify-between mb-8;
+  }
+  .step-container {
+    @apply relative overflow-hidden min-h-[220px];
+  }
+  .form-actions {
+    @apply flex items-center justify-between mt-12 pt-6 border-t border-gray-800;
+  }
+
+  /* ==========================================================================
+     9. DELETE UI & DANGER ACTIONS
+     ========================================================================== */
+
+  /* Card-level delete */
+  .card-top-row {
+    @apply flex items-start justify-between mb-2;
+  }
+  .delete-btn {
+    @apply flex items-center space-x-1 text-xs text-gray-500 hover:text-red-400 transition-colors px-2 py-1 rounded-md hover:bg-red-500/10 flex-shrink-0;
+  }
+  .delete-overlay {
+    @apply absolute inset-0 z-10 bg-darkCard/95 backdrop-blur-sm flex flex-col items-center justify-center p-6 rounded-xl;
+  }
+  .icon-warn {
+    @apply w-8 h-8 text-amber-400 mb-3;
+  }
+  .delete-confirm-text {
+    @apply text-white font-semibold text-base mb-1;
+  }
+  .delete-confirm-sub {
+    @apply text-sm text-gray-400 mb-5;
+  }
+  .delete-actions {
+    @apply flex items-center space-x-3;
+  }
+
+  /* Topbar delete (RoadmapDetail) */
+  .topbar-actions {
+    @apply flex items-center space-x-4;
+  }
+  .inline-delete-confirm {
+    @apply flex items-center space-x-2;
+  }
+  .delete-confirm-label {
+    @apply text-sm text-red-400 font-medium;
+  }
+
+  /* Button variants for destructive / ghost actions */
+  .btn-danger {
+    @apply px-3 py-1.5 text-sm font-medium bg-red-600 hover:bg-red-500 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-ghost {
+    @apply px-3 py-1.5 text-sm font-medium text-gray-400 hover:text-white bg-transparent hover:bg-gray-800 rounded-lg transition-colors disabled:opacity-50;
+  }
+
+  /* ==========================================================================
+     10. TOASTS
+     ========================================================================== */
+  .toast-container {
+    @apply fixed bottom-6 right-6 z-50 flex flex-col space-y-3 max-w-sm;
+  }
+  .toast {
+    @apply flex items-center space-x-3 px-4 py-3 rounded-xl shadow-2xl border text-sm font-medium;
+  }
+  .toast-success {
+    @apply bg-green-900/80 border-green-600/30 text-green-200 backdrop-blur-md;
+  }
+  .toast-error {
+    @apply bg-red-900/80 border-red-600/30 text-red-200 backdrop-blur-md;
+  }
+  .toast-message {
+    @apply flex-1;
+  }
+  .toast-close {
+    @apply text-white/50 hover:text-white transition-colors p-1;
+  }
+
+  /* ==========================================================================
+     11. INLINE EDIT
+     ========================================================================== */
+  .rename-input {
+    @apply bg-transparent border-b-2 border-brandPrimary text-white text-2xl md:text-3xl font-bold tracking-tight outline-none capitalize w-full;
+  }
+  .rename-actions {
+    @apply flex items-center space-x-2 mt-2;
+  }
+}
