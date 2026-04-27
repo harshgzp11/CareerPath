@@ -181,4 +181,8 @@ To ensure clean commits:
 
 ## License
 
-MIT
+Open Source
+
+## AUTHOR 
+
+Harsh Srivastava
