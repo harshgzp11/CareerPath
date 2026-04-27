@@ -149,22 +149,7 @@ The app will be available at `http://localhost:5173`.
 
 ### 5. Open your browser and navigate to `http://localhost:5173`.
 
----
 
-## Clean Commits
-
-This project follows a clean commit history approach:
-- Each commit represents a logical unit of work.
-- Commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/) standard.
-- Example commit messages:
-  - `feat: add AI roadmap generation`
-  - `fix: resolve loading state bug in Dashboard`
-  - `chore: update dependencies`
-
-To ensure clean commits:
-- Use `git add` to stage only relevant changes.
-- Use `git commit -m "<type>: <description>"` to create meaningful commit messages.
-- Avoid vague messages like "final changes" or "fixes".
 
 ---
 
